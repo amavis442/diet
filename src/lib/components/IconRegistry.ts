@@ -27,6 +27,7 @@ import {
     Utensils,
     Syringe,
     Candy,
+    Toilet,
     type Icon as IconType
 } from '@lucide/svelte';
 
@@ -65,7 +66,8 @@ export const IconMap: Record<string, typeof IconType> = {
     Coffee, 
     Utensils, 
     Syringe, 
-    Candy
+    Candy,
+    Toilet
 };
 
 export type IconName = keyof typeof IconMap;
