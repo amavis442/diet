@@ -38,11 +38,14 @@ export const actions = {
     create: async ({ request }) => {
         const form = await request.formData();
         const typeId = form.get('typeId') as string;
-        const note = form.get('note') as string;
+        let note = form.get('note') as string;
         const dateStr = form.get('date') as string; // e.g. "2025-08-11"
         const hourStr = form.get('hour') as string; 
         const minuteStr = form.get('minute') as string; 
         
+        if (!note ||note.length < 1) {
+            note = "-";
+        }
         //const [year, month, day] = dateStr.split('-').map(Number);
         //const hour = Number(hourStr);
         //const minute = Number(minuteStr);

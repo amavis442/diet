@@ -14,6 +14,8 @@ export const load = (async () => {
         .innerJoin(logTypes, eq(logEntries.typeId, logTypes.id))
         .where(sql`DATE(${logEntries.timestamp}) = ${targetDate}`).orderBy(asc(logEntries.timestamp));
 
+    const allLogTypes = await db.select().from(logTypes);
+
     console.log(logRaw, targetDate);
 
     /* const logTypeRaw = await db.select().from(logTypes).where(eq(logTypes.id, id));
@@ -29,11 +31,14 @@ export const load = (async () => {
     */
     // Check if logRaw is a non-empty array
     if (Array.isArray(logRaw) && logRaw.length > 0) {
-        return { logRaw };
+        const result = { entries: logRaw, logtypes: allLogTypes }; 
+        console.log(result);
+        return { entries: logRaw, logtypes: allLogTypes };
+
     } else {
         // Return a fallback or empty structure
         return {
-            logRaw: [],
+            entries: [],
             message: `No log entries found for ${targetDate}`
         };
     }

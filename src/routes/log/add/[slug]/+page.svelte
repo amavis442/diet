@@ -11,9 +11,9 @@
 </script>
 
 <div class="grid">
-	<div class="mb-4 flex w-full p-2">
-		<div class="p-2"><Icon name={logType?.icon} /></div>
-		{logType?.name}
+	<div class="mb-4 flex w-full p-2 bg-{logType?.color} mt-4">
+		<div class="flex p-2 rounded border mr-2"><Icon name={logType?.icon} /></div>
+		<div class="p-2">{logType?.name}</div>
 	</div>
 	<LogForm {initialData} />
 
