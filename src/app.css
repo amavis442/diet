@@ -1,0 +1,7 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/forms';
+@plugin '@tailwindcss/typography';
+
+@source inline('{hover,focus}:bg-{red,green,blue}-500 bg-{red,orange,amber,yellow,lime,green,emerald,teal,cyan,sky,blue,indigo,violet,fuchsia,pink,rose,gray,slate}-100 bg-amber-{800,900}');
+
+
