@@ -1,22 +1,62 @@
 <script lang="ts">
 	import Icon from '$lib/components/Icon.svelte';
-	import {utcToLocalTime } from '$lib/utils/date';
-
+	import { format } from 'date-fns';
+	import { DatePicker } from '@svelte-plugins/datepicker';
+	import { goto } from '$app/navigation';
+	
 	let { data } = $props();
 
-	//console.log(data.logRaw[0].log_entries.note);
-	const selectedDate = $state(new Date());
+	let startDate = $state(new Date());
+	let dateFormat = 'MM/dd/yy';
+	let isOpen = $state(false);
+
+	let entries = $derived(data.entries);
+
+	const toggleDatePicker = () => (isOpen = !isOpen);
+
+	const formatDate = (dateString: Date) => {
+		return (dateString && format(new Date(dateString), dateFormat)) || '';
+	};
+
+	let initialized = $state(false);
+	$effect(() => {
+		if (!initialized) {
+			initialized = true;
+			return;
+		}
+		if (startDate) {
+			console.log('startDate changed:', startDate);
+			const isoDate = format(new Date(startDate), 'yyyy-MM-dd');
+			console.log('iso date is: ', isoDate);
+			goto(`?date=${isoDate}`);
+		}
+	});
+
+	let formattedStartDate = $derived(formatDate(startDate));
+
+	const selectedDate = $derived(data?.date ?? new Date());
 </script>
 
 <div class="grid gap-4">
 	<h1 class="my-4 text-xl font-bold">Daily Log: {selectedDate.toDateString()}</h1>
 
+	<DatePicker bind:isOpen bind:startDate>
+		<input
+			type="text"
+			placeholder="Select date"
+			bind:value={formattedStartDate}
+			onclick={toggleDatePicker}
+		/>
+	</DatePicker>
+
 	<!-- Icons to add entry -->
 	<div class="grid grid-cols-5 gap-2">
 		{#if Array.isArray(data.logtypes) && data.logtypes.length > 0}
 			{#each data.logtypes as logtype}
-				<a href="/log/add/{logtype.id}" class="rounded bg-{logtype.color} p-2 flex items-center justify-center" 
-					title="{logtype.name}"><Icon name={logtype.icon} /></a
+				<a
+					href="/log/add/{logtype.id}"
+					class="rounded bg-{logtype.color} flex items-center justify-center p-2"
+					title={logtype.name}><Icon name={logtype.icon} /></a
 				>
 			{/each}
 		{/if}
@@ -24,15 +64,15 @@
 
 	<!-- Placeholder entry list -->
 	<ul class="mt-4">
-		{#if Array.isArray(data.entries) && data.entries.length > 0}
-			{#each data.entries as item, index}
+		{#if Array.isArray(entries) && entries.length > 0}
+			{#each entries as item, index}
 				<li class="bg-{item.log_types.color} flex gap-x-1 p-2">
-					<a href='/log/edit/{item.log_entries.id}' class="flex p-2 gap-2">
-					<Icon name={item.log_types.icon} />
-					{item.log_entries.timestamp.toTimeString().slice(0,5)} &mdash; {item.log_types.name}
-					{#if item.log_entries.note != '-'}
-						({item.log_entries.note})
-					{/if}
+					<a href="/log/edit/{item.log_entries.id}" class="flex gap-2 p-2">
+						<Icon name={item.log_types.icon} />
+						{item.log_entries.timestamp.toTimeString().slice(0, 5)} &mdash; {item.log_types.name}
+						{#if item.log_entries.note != '-'}
+							({item.log_entries.note})
+						{/if}
 					</a>
 				</li>
 			{/each}
