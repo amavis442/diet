@@ -1,3 +1,5 @@
+import { TZDate } from '@date-fns/tz';
+
 /**
  * Date really sucks. Need localtime, not UTC.
  * 
@@ -63,5 +65,25 @@ export function formatTimeForInput(currentDateTime: Date): { hour: string; minut
     const hour = String(currentDateTime.getHours()).padStart(2, '0');
     const minute = String(currentDateTime.getMinutes()).padStart(2, '0');
 
-    return {hour, minute};
+    return { hour, minute };
+}
+
+export function getUTCRangeForLocalDay(date: Date, timeZone: string) {
+    const localStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
+    const localEnd = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
+
+    return {
+        startUTC: new TZDate(localStart, timeZone),
+        endUTC: new TZDate(localEnd, timeZone),
+    };
+}
+
+export function getUTCRange(date: Date) {
+    const localStart = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 0, 0, 0);
+    const localEnd = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59);
+
+    return {
+        startUTC: localStart,
+        endUTC: localEnd,
+    }
 }
