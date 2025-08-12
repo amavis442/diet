@@ -1,42 +1,36 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
+	import {
+		formatDateForInput,
+		formatTimeForInput,
+	} from '$lib/utils/date';
 
 	let { initialData = {}, action = 'create' } = $props<{
-		initialData?: Partial<{ id: string; typeId: string; note: string }>;
+		initialData?: Partial<{ id: string; typeId: string; note: string, timestamp: Date }>;
 		action?: 'create' | 'update';
 	}>();
 
-	function formatDateForInput(date: Date): string {
-		const year = date.getFullYear();
-		const month = String(date.getMonth() + 1).padStart(2, '0');
-		const day = String(date.getDate()).padStart(2, '0');
-
-		return `${year}-${month}-${day}`; // ✅ "YYYY-MM-DD"
-	}
-
-	const currentDateTime = new Date();
-
-
-	let note = $state(initialData.note ?? '');
+	const currentTimestamp = new Date();
+	console.log('Current time: ',  currentTimestamp);
+	const currentDateTime = currentTimestamp;
 	
-	let date = $state(formatDateForInput(currentDateTime));//  initialData.timestamp?.toISOString().slice(0, 10); // "YYYY-MM-DD"
-	let hour = $state(String(currentDateTime.getHours()).padStart(2, '0'));
-    let minute = $state(String(currentDateTime.getMinutes()).padStart(2, '0'));
+	let note = $state(initialData.note ?? '');
+
+	let date = $state(formatDateForInput(currentDateTime));
+	const { hour: hourStr, minute: minuteStr } = formatTimeForInput(currentDateTime);
+
+	let hour = $state(hourStr);
+	let minute = $state(minuteStr);
 
 	if (initialData.timestamp) {
-		hour = String(initialData.timestamp?.getHours()).padStart(2, '0');
-		minute = String(initialData.timestamp?.getMinutes()).padStart(2, '0');
+		const { hour: initialHourStr, minute: initialMinuteStr } = formatTimeForInput(
+			initialData.timestamp
+		);
+
+		hour = initialHourStr;
+		minute = initialMinuteStr;
 		date = formatDateForInput(currentDateTime);
 	}
-	/*
-	if (!existingDate) {
-		existingDate = formatDateForInput(currentDateTime);
-		console.log(existingDate);
-		existingTime = formatTimeForInput(currentDateTime);
-		console.log(existingTime);
-	}
-	let date = $state(existingDate ?? '');
-	*/
 </script>
 
 <form method="POST" class="max-w-md space-y-4" use:enhance>
