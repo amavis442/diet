@@ -38,7 +38,7 @@
 </script>
 
 <div class="grid gap-4">
-	<h1 class="my-4 text-xl font-bold">Daily Log: {selectedDate.toDateString()}</h1>
+	<h1 class="my-4 text-xl font-bold">Daily Log: {format(selectedDate,'yyyy MMMM dd, EEEE')}</h1>
 
 	<DatePicker bind:isOpen bind:startDate>
 		<input
