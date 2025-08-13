@@ -3,7 +3,7 @@
 	import { format } from 'date-fns';
 	import { DatePicker } from '@svelte-plugins/datepicker';
 	import { goto } from '$app/navigation';
-	
+
 	let { data } = $props();
 
 	let startDate = $state(new Date());
@@ -37,8 +37,8 @@
 	const selectedDate = $derived(data?.date ?? new Date());
 </script>
 
-<div class="grid gap-4">
-	<h1 class="my-4 text-xl font-bold">Daily Log: {format(selectedDate,'yyyy MMMM dd, EEEE')}</h1>
+<div class="flex flex-col h-full p-4 gap-4">
+	<h1 class="my-4 text-xl font-bold">Daily Log: {format(selectedDate, 'yyyy MMMM dd, EEEE')}</h1>
 
 	<DatePicker bind:isOpen bind:startDate>
 		<input
@@ -63,21 +63,23 @@
 	</div>
 
 	<!-- Placeholder entry list -->
-	<ul class="mt-4">
-		{#if Array.isArray(entries) && entries.length > 0}
-			{#each entries as item, index}
-				<li class="bg-{item.log_types.color} flex gap-x-1 p-2">
-					<a href="/log/edit/{item.log_entries.id}" class="flex gap-2 p-2">
-						<Icon name={item.log_types.icon} />
-						{item.log_entries.timestamp.toTimeString().slice(0, 5)} &mdash; {item.log_types.name}
-						{#if item.log_entries.note != '-'}
-							({item.log_entries.note})
-						{/if}
-					</a>
-				</li>
-			{/each}
-		{:else}
-			<li>No data....</li>
-		{/if}
-	</ul>
+	<div class="flex-grow overflow-y-auto border rounded h-140">
+		<ul class="mt-4">
+			{#if Array.isArray(entries) && entries.length > 0}
+				{#each entries as item, index}
+					<li class="bg-{item.log_types.color} flex gap-x-1 p-2">
+						<a href="/log/edit/{item.log_entries.id}" class="flex gap-2 p-2">
+							<Icon name={item.log_types.icon} />
+							{item.log_entries.timestamp.toTimeString().slice(0, 5)} &mdash; {item.log_types.name}
+							{#if item.log_entries.note != '-'}
+								({item.log_entries.note})
+							{/if}
+						</a>
+					</li>
+				{/each}
+			{:else}
+				<li>No data....</li>
+			{/if}
+		</ul>
+	</div>
 </div>
