@@ -7,7 +7,9 @@ export const logEntries = pgTable('log_entries', {
     typeId: uuid('type_id').references(() => logTypes.id).notNull(),
     timestamp: timestamp('timestamp', { mode: 'date', withTimezone: true }).notNull(),
     unix: integer()
-    .notNull()
-    .default(sql`extract(epoch from now())`),
+        .notNull()
+        .default(sql`extract(epoch from now())`),
     note: text('note'),
+    description: text('description'),
+    score: integer().notNull().default(sql`4`),
 });

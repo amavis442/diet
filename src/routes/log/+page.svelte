@@ -37,7 +37,7 @@
 	const selectedDate = $derived(data?.date ?? new Date());
 </script>
 
-<div class="flex flex-col h-full p-4 gap-4">
+<div class="flex h-full flex-col gap-4 p-4">
 	<h1 class="my-4 text-xl font-bold">Daily Log: {format(selectedDate, 'yyyy MMMM dd, EEEE')}</h1>
 
 	<DatePicker bind:isOpen bind:startDate>
@@ -63,7 +63,7 @@
 	</div>
 
 	<!-- Placeholder entry list -->
-	<div class="flex-grow overflow-y-auto border rounded h-140">
+	<div class="h-140 flex-grow overflow-y-auto rounded border">
 		<ul class="mt-4">
 			{#if Array.isArray(entries) && entries.length > 0}
 				{#each entries as item, index}
@@ -71,8 +71,14 @@
 						<a href="/log/edit/{item.log_entries.id}" class="flex gap-2 p-2">
 							<Icon name={item.log_types.icon} />
 							{item.log_entries.timestamp.toTimeString().slice(0, 5)} &mdash; {item.log_types.name}
+							{#if item.log_types.name.includes('Toilet')}
+								<div class="rounded border pr-2 pl-2">score: {item.log_entries.score}</div>
+							{/if}
 							{#if item.log_entries.note != '-'}
-								({item.log_entries.note})
+								<div class="rounded border pr-2 pl-2">{item.log_entries.note}</div>
+							{/if}
+							{#if item.log_entries.description != '-'}
+								<div class="rounded border pr-2 pl-2">{item.log_entries.description}</div>
 							{/if}
 						</a>
 					</li>

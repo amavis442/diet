@@ -31,6 +31,8 @@ const schema = z.object({
 	timestamp: z.date(),
     unix: z.number(),
     note: z.string().min(1),
+    description: z.string(),
+    score: z.number()
 });
 
 export const actions = {
@@ -38,12 +40,21 @@ export const actions = {
         const form = await request.formData();
         const typeId = form.get('typeId') as string;
         let note = form.get('note') as string;
+        
+        let description = form.get('description') as string;
+        let scoreStr = form.get('score') as string;
+        let score: Number = scoreStr ? Number(scoreStr) : Number(4);
+
         const dateStr = form.get('date') as string; // e.g. "2025-08-11"
         const hourStr = form.get('hour') as string; 
         const minuteStr = form.get('minute') as string; 
         
         if (!note ||note.length < 1) {
             note = "-";
+        }
+        
+        if (!description ||description.length < 1) {
+            description = "-";
         }
 
         // Construct local Date object
@@ -57,8 +68,8 @@ export const actions = {
 
         const unixMillis = localDate.getTime(); // milliseconds
         const unixSeconds = Math.floor(unixMillis / 1000); // seconds
-        const result = schema.safeParse({ typeId, timestamp: localDate, note, unix: unixSeconds});
-        //console.log(result.data);
+        const result = schema.safeParse({ typeId, timestamp: localDate, note, unix: unixSeconds, description, score});
+        console.log(result.data);
 
 
         if (!result.success) {
