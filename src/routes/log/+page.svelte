@@ -74,10 +74,10 @@
 							{#if item.log_types.name.includes('Toilet')}
 								<div class="rounded border pr-2 pl-2">score: {item.log_entries.score}</div>
 							{/if}
-							{#if item.log_entries.note != '-'}
+							{#if item.log_entries.note != '-' && item.log_entries.note != ''}
 								<div class="rounded border pr-2 pl-2">{item.log_entries.note}</div>
 							{/if}
-							{#if item.log_entries.description != '-'}
+							{#if item.log_entries.description != '-' && item.log_entries.description != ''}
 								<div class="rounded border pr-2 pl-2">{item.log_entries.description}</div>
 							{/if}
 						</a>
