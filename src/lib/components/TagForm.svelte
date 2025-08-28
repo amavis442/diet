@@ -4,16 +4,48 @@
 	let {
 		initialData = {},
 		action = 'create',
+		tagInUse = false,
+		count = 0,
+		tagId = ''
 	} = $props<{
-		initialData?: Partial<{ id: string; label: string;  }>;
+		initialData?: Partial<{ id: string; label: string }>;
 		action?: 'create' | 'update';
-
+		tagInUse: true | false;
+		tagId: string;
+		count: number;
 	}>();
 
+	$effect(() => {
+		console.log(tagInUse);
+	});
 	let label = $state(initialData.label ?? '');
 </script>
 
-<form method="POST" class="max-w-md space-y-4" use:enhance>
+{#if tagInUse}
+	<div class="rounded bg-yellow-100 p-4 text-yellow-800">
+		<strong>Cannot delete tag:</strong> This tag is used in {count} log entries and cannot be removed.
+		<br />
+		<a href={`/admin/logs/${tagId}`} class="text-blue-600 underline">View linked entries</a>
+	</div>
+{/if}
+
+<form
+	method="POST"
+	class="max-w-md space-y-4"
+	use:enhance={() => {
+		return async ({ result, update }) => {
+			if (result.type === 'failure' && result.data?.tagInUse) {
+				// Handle tag-in-use warning here
+				tagInUse = true;
+				count = result.data.count;
+				tagId = result.data.tagId;
+			}
+
+			// Optionally apply default behavior
+			update(); // resets form, invalidates data, etc.
+		};
+	}}
+>
 	{#if initialData.id}
 		<input type="hidden" name="id" value={initialData.id} />
 	{/if}
@@ -29,7 +61,6 @@
 		/>
 	</div>
 
-	
 	<div class="flex gap-4">
 		<button
 			id="btnFormSubmit"

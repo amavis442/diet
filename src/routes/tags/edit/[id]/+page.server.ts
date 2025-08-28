@@ -1,6 +1,7 @@
 import type { PageServerLoad } from '../$types';
 import { db } from '$lib/server/db';
 import { tags } from '$lib/server/db/schema/tags';
+import { logTag } from '$lib/server/db/schema/log_tag';
 import type { Actions } from '../$types';
 import { fail, redirect } from '@sveltejs/kit';
 import { z } from 'zod';
@@ -16,7 +17,7 @@ export const load: PageServerLoad = async ({ params }) => {
     let id = params.id;
 
     const logType = await db.select().from(tags).where(eq(tags.id, id));
-    return { logType };
+    return { logType, tagInUse: false, count:0, tagId:'' };
 };
 
 export const actions = {
@@ -40,10 +41,26 @@ export const actions = {
     },
     delete: async ({ request }) => {
         const form = await request.formData();
-        const id = form.get('id');
-        if (typeof id !== 'string') return fail(400, { error: 'Missing ID' });
+        const tagId = form.get('id');
+        if (typeof tagId !== 'string') return fail(400, { error: 'Missing ID' });
 
-        await db.delete(tags).where(eq(tags.id, id));
+        // Check if tag is linked to any log entries
+        const linkedEntries = await db
+            .select()
+            .from(logTag)
+            .where(eq(logTag.tagId, tagId));
+
+
+        if (linkedEntries.length > 0) {
+            return fail(200,{
+                tagInUse: true,
+                count: linkedEntries.length,
+                tagId
+            });
+        }
+
+
+        await db.delete(tags).where(eq(tags.id, tagId));
         throw redirect(303, '/tags');
     }
 } satisfies Actions;
