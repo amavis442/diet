@@ -5,6 +5,7 @@
 
 	let { data }: PageProps = $props();
 	let logType = data.logType;
+	const tags = data.tags  ?? [];
 
 	let initialData = { typeId: logType?.id, logTypeName: logType?.name };
 	console.log(data);
@@ -15,7 +16,7 @@
 		<div class="mr-2 flex rounded border p-2"><Icon name={logType?.icon} /></div>
 		<div class="p-2">{logType?.name}</div>
 	</div>
-	<LogForm {initialData} />
+	<LogForm {initialData} {tags} />
 	<hr class="mt-2" />
 	<div class="mt-4">
 		<a href="/log" class="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">&lt;&lt; Back</a>

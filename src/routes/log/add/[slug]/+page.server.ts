@@ -3,32 +3,37 @@ import type { PageServerLoad, Actions } from './$types';
 import { db } from '$lib/server/db';
 import { fail, redirect } from '@sveltejs/kit';
 import { logTypes } from '$lib/server/db/schema/log_types';
+import { tags } from '$lib/server/db/schema/tags';
 import { logEntries } from '$lib/server/db/schema/log_entries';
 import { z } from 'zod';
 import { eq } from 'drizzle-orm';
-import {localTimeToUTC} from '$lib/utils/date';
+import { localTimeToUTC } from '$lib/utils/date';
+import { saveTagsForEntry } from '$lib/server/db/utils/saveTags';
 
 export const load: PageServerLoad = (async ({ params }) => {
 
-	let id = params.slug;
+    let id = params.slug;
 
-	if (typeof id !== 'string') return fail(400, { error: 'Missing ID' });
-	
-	const logTypeRaw = await db.select().from(logTypes).where(eq(logTypes.id, id));
-	if (logTypeRaw) {
-		let logType = logTypeRaw[0];
+    if (typeof id !== 'string') return fail(400, { error: 'Missing ID' });
 
-		return {
-			logType: logType,
-		};
-	}
+    const allTags = await db.select().from(tags);
 
-	error(404, 'Not found');
+    const logTypeRaw = await db.select().from(logTypes).where(eq(logTypes.id, id));
+    if (logTypeRaw) {
+        let logType = logTypeRaw[0];
+
+        return {
+            logType: logType,
+            tags: allTags
+        };
+    }
+
+    error(404, 'Not found');
 }) satisfies PageServerLoad;
 
 const schema = z.object({
     typeId: z.string().min(1).max(50),
-	timestamp: z.date(),
+    timestamp: z.date(),
     unix: z.number(),
     note: z.string().min(1),
     description: z.string(),
@@ -40,20 +45,21 @@ export const actions = {
         const form = await request.formData();
         const typeId = form.get('typeId') as string;
         let note = form.get('note') as string;
-        
+
         let description = form.get('description') as string;
         let scoreStr = form.get('score') as string;
         let score: Number = scoreStr ? Number(scoreStr) : Number(4);
+        let tags = form.getAll('tags');
 
         const dateStr = form.get('date') as string; // e.g. "2025-08-11"
-        const hourStr = form.get('hour') as string; 
-        const minuteStr = form.get('minute') as string; 
-        
-        if (!note ||note.length < 1) {
+        const hourStr = form.get('hour') as string;
+        const minuteStr = form.get('minute') as string;
+
+        if (!note || note.length < 1) {
             note = "-";
         }
-        
-        if (!description ||description.length < 1) {
+
+        if (!description || description.length < 1) {
             description = "-";
         }
 
@@ -68,7 +74,7 @@ export const actions = {
 
         const unixMillis = localDate.getTime(); // milliseconds
         const unixSeconds = Math.floor(unixMillis / 1000); // seconds
-        const result = schema.safeParse({ typeId, timestamp: localDate, note, unix: unixSeconds, description, score});
+        const result = schema.safeParse({ typeId, timestamp: localDate, note, unix: unixSeconds, description, score });
         console.log(result.data);
 
 
@@ -76,7 +82,13 @@ export const actions = {
             return fail(400, { error: 'Invalid input' });
         }
 
-        await db.insert(logEntries).values(result.data);
+        const inserted = await db.insert(logEntries).values(result.data).returning({ id: logEntries.id });
+
+        const newId = inserted[0]?.id;
+        if (newId) {
+            await saveTagsForEntry(newId, tags);
+        }
+
         throw redirect(303, '/log');
     },
 } satisfies Actions;

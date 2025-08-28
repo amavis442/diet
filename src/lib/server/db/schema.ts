@@ -24,12 +24,15 @@ import { entryTags } from './schema/entry_tags';
 import { logEntries } from './schema/log_entries';
 import { logTypes } from './schema/log_types';
 import { tags } from './schema/tags';
+import { logTag} from './schema/log_tag';
 
 // 👇 Export inferred types
 export type EntryTag = typeof entryTags.$inferSelect;
 export type LogEntry = typeof logEntries.$inferSelect;
 export type LogType = typeof logTypes.$inferSelect;
 export type Tag = typeof tags.$inferSelect;
+export type LogTag = typeof logTag.$inferSelect;
+
 
 export type NewLogEntry = typeof logEntries.$inferInsert;
 export type NewTag = typeof tags.$inferInsert;
@@ -40,5 +43,6 @@ export {
     entryTags,
     logEntries,
     logTypes,
-    tags
+    tags,
+	logTag
 };

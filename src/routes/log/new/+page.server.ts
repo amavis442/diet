@@ -1,6 +1,7 @@
 import type { Actions } from './$types';
 import { db } from '$lib/server/db';
 import { logTypes } from '$lib/server/db/schema/log_types';
+import { tags } from '$lib/server/db/schema/tags';
 import { fail, redirect } from '@sveltejs/kit';
 import { z } from 'zod';
 import { eq } from 'drizzle-orm';
@@ -12,7 +13,8 @@ const schema = z.object({
 
 export async function load() {
     const types = await db.select().from(logTypes);
-    return { types };
+    const logTags = await db.select().from(tags);
+    return { types, logTags };
 }
 
 export const actions = {

@@ -3,6 +3,10 @@ import { fail, redirect } from '@sveltejs/kit';
 import { db } from '$lib/server/db';
 import { logTypes } from '$lib/server/db/schema/log_types';
 import { logEntries } from '$lib/server/db/schema/log_entries';
+import { tags } from '$lib/server/db/schema/tags';
+import { logTag } from '$lib/server/db/schema/log_tag';
+import { saveTagsForEntry } from '$lib/server/db/utils/saveTags';
+
 import { z } from 'zod';
 import { eq } from 'drizzle-orm';
 
@@ -25,6 +29,13 @@ export const load = (async ({ params }) => {
         .innerJoin(logTypes, eq(logEntries.typeId, logTypes.id))
         .where(eq(logEntries.id, params.id));
 
+    const tagRows = await db
+        .select()
+        .from(logTag)
+        .innerJoin(tags, eq(logTag.tagId, tags.id))
+        .where(eq(logTag.entryId, id));
+
+    const allTags = await db.select().from(tags);
     const allLogTypes = await db.select().from(logTypes);
 
     console.log(logRaw);
@@ -34,14 +45,23 @@ export const load = (async ({ params }) => {
         const entry = logRaw[0];
         //entry.log_entries.timestamp = formatInTimeZone(entry.log_entries.timestamp,'Europe/Amsterdam',"yyyy-MM-dd'T'HH:mm:ss");
 
-        const result = { entry: entry, logtypes: allLogTypes };
+        const result = {
+            entry: entry,
+            selectTags: tagRows.map(row => row.tags),
+            logtypes: allLogTypes,
+            tags: allTags,
+            selectedTagIds: tagRows.map(row => row.tags.id)
+        };
         console.log('Result is:', result);
-        return { entry: logRaw, logtypes: allLogTypes };
+        return result;
     } else {
         // Return a fallback or empty structure
         return {
             entry: {},
             logtypes: [],
+            selectedTags: [],
+            tags: [],
+            selectedTagIds: [],
             message: `No log entry found for ${params.id}`
         };
     }
@@ -60,16 +80,19 @@ export const actions = {
         const hourStr = form.get('hour') as string;
         const minuteStr = form.get('minute') as string;
 
+        let tags = form.getAll('tags');// .get('tags') as string;
+        console.log('Form tags:', tags);
+
         if (typeof id !== 'string') return fail(400, { error: 'Missing ID' });
 
         if (!note || note.length < 1) {
             note = "-";
         }
 
-        if (!description ||description.length < 1) {
+        if (!description || description.length < 1) {
             description = "-";
         }
-        
+
         const timestampString = `${dateStr} ${hourStr}:${minuteStr}:00`;
 
         console.log("Update log entry", typeId, note, timestampString, form, request);
@@ -86,6 +109,8 @@ export const actions = {
         }
 
         await db.update(logEntries).set({ typeId: result.data.typeId, note: result.data.note, description: result.data.description, score: result.data.score, timestamp: result.data.timestamp }).where(eq(logEntries.id, id));
+
+        saveTagsForEntry(id, tags);
 
         throw redirect(303, '/log');
     },

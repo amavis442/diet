@@ -2,7 +2,11 @@
 	import { enhance } from '$app/forms';
 	import { formatDateForInput, formatTimeForInput } from '$lib/utils/date';
 
-	let { initialData = {}, action = 'create' } = $props<{
+	let {
+		initialData = {},
+		action = 'create',
+		tags = []
+	} = $props<{
 		initialData?: Partial<{
 			id: string;
 			typeId: string;
@@ -11,9 +15,14 @@
 			description: string;
 			score: number;
 			timestamp: Date;
+			selectedTags: { id: string; label: string }[];
+			selectedTagIds: string[];
 		}>;
 		action?: 'create' | 'update';
+		tags: { id: string; label: string }[];
 	}>();
+
+	console.log('InitialData: ', initialData);
 
 	const currentTimestamp = new Date();
 	console.log('Current time: ', currentTimestamp);
@@ -29,6 +38,8 @@
 	let hour = $state(hourStr);
 	let minute = $state(minuteStr);
 
+	let selTags = $state(initialData.selectedTagIds ?? []);
+
 	if (initialData.timestamp) {
 		const { hour: initialHourStr, minute: initialMinuteStr } = formatTimeForInput(
 			initialData.timestamp
@@ -42,18 +53,30 @@
 	function* range(start: number, end: number): Generator<number> {
 		for (let i = start; i < end; i++) yield i;
 	}
+
+	function toggleTag(id: string) {
+		if (selTags.includes(id)) {
+			selTags = selTags.filter((tagId: string) => tagId !== id);
+		} else {
+			selTags = [...selTags, id];
+		}
+	}
 </script>
 
 <form method="POST" class="max-w-md space-y-4" use:enhance>
 	{#if initialData.id}
 		<input type="hidden" name="id" value={initialData.id} />
 	{/if}
+	{#each selTags as tagId}
+		<input type="hidden" name="tags" value={tagId} />
+	{/each}
 
 	<input type="hidden" name="typeId" value={initialData.typeId} />
 
 	<div>
 		<label class="block text-sm font-medium text-gray-700" for="date">Date</label>
 		<input
+			id="date"
 			type="date"
 			name="date"
 			bind:value={date}
@@ -81,37 +104,57 @@
 	</div>
 
 	{#if !initialData.logTypeName || (initialData.logTypeName && !initialData.logTypeName.includes('Toilet'))}
-	<div>
-		<label class="block text-sm font-medium text-gray-700" for="note">Note</label>
-		<textarea
-			name="note"
-			bind:value={note}
-			maxlength="50"
-			class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-		></textarea>
-	</div>
-	<div>
-		<label class="block text-sm font-medium text-gray-700" for="description">Description</label>
-		<textarea
-			name="description"
-			bind:value={description}
-			maxlength="50"
-			class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-		></textarea>
-	</div>
+		<div>
+			<label class="block text-sm font-medium text-gray-700" for="note">Note</label>
+			<textarea
+				id="note"
+				name="note"
+				bind:value={note}
+				maxlength="50"
+				class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+			></textarea>
+		</div>
+		<div>
+			<label class="block text-sm font-medium text-gray-700" for="description">Description</label>
+			<textarea
+				id="description"
+				name="description"
+				bind:value={description}
+				maxlength="50"
+				class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+			></textarea>
+		</div>
 	{/if}
 
 	{#if initialData.logTypeName && initialData.logTypeName.includes('Toilet')}
 		<div>
-			<label class="block text-sm font-medium text-gray-700" for="description">Score</label>
-			{#each range(1, 8) as number}
-				<label class="p-1">
-					<input type="radio" name="score" value={number} bind:group={score} class="p-1" />
-					{number}
-				</label>
-			{/each}
+			<label class="block text-sm font-medium text-gray-700" for="score">Score</label>
+			<div id="score">
+				{#each range(1, 8) as number}
+					<label class="p-1">
+						<input type="radio" name="score" value={number} bind:group={score} class="p-1" />
+						{number}
+					</label>
+				{/each}
+			</div>
 		</div>
 	{/if}
+
+	<div>
+		<label class="block text-sm font-medium text-gray-700" for="alltag">Tags</label>
+		<div id="alltag" class="mt-2 flex flex-wrap gap-2" >
+			{#each tags as tag}
+				<button
+					type="button"
+					class="rounded border px-3 py-1 text-sm hover:bg-blue-100"
+					class:selected={selTags.includes(tag.id)}
+					onclick={() => toggleTag(tag.id)}
+				>
+					{tag.label}
+				</button>
+			{/each}
+		</div>
+	</div>
 
 	<div class="flex gap-4">
 		<button
@@ -134,3 +177,11 @@
 		{/if}
 	</div>
 </form>
+
+<style>
+	.selected {
+		background-color: #3b82f6;
+		color: white;
+		border-color: #3b82f6;
+	}
+</style>
