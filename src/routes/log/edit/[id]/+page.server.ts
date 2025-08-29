@@ -119,6 +119,8 @@ export const actions = {
         const id = form.get('id');
         if (typeof id !== 'string') return fail(400, { error: 'Missing ID' });
 
+        await db.delete(logTag).where(eq(logTag.entryId, id));
+
         await db.delete(logEntries).where(eq(logEntries.id, id));
         throw redirect(303, '/log');
     }
