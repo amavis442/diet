@@ -3,6 +3,7 @@
 	import { format } from 'date-fns';
 	import { DatePicker } from '@svelte-plugins/datepicker';
 	import { goto } from '$app/navigation';
+	import type { Entries } from '$lib/types';
 
 	let { data } = $props();
 
@@ -10,7 +11,7 @@
 	let dateFormat = 'MM/dd/yy';
 	let isOpen = $state(false);
 
-	let entries = $derived(data.entries);
+	let entries: Entries = $derived(data.entries);
 
 	const toggleDatePicker = () => (isOpen = !isOpen);
 
@@ -46,6 +47,8 @@
 			placeholder="Select date"
 			bind:value={formattedStartDate}
 			onclick={toggleDatePicker}
+			id="datepicker"
+			class="rounded"
 		/>
 	</DatePicker>
 
@@ -74,10 +77,10 @@
 							{#if item.log_types.name.includes('Toilet')}
 								<div class="rounded border pr-2 pl-2">score: {item.log_entries.score}</div>
 							{/if}
-							{#if item.log_entries.note != '-' && item.log_entries.note != ''}
-								<div class="rounded border pr-2 pl-2">{item.log_entries.note}</div>
+							{#if item.log_entries.note != undefined && item.log_entries.note != '-' && item.log_entries.note.length > 0}
+								<div class="rounded border pr-2 pl-2">{item.log_entries.note.substring(0, 25)}...</div>
 							{/if}
-							{#if item.log_entries.description != '-' && item.log_entries.description != ''}
+							{#if item.log_entries.description != undefined && item.log_entries.description != '-' && item.log_entries.description.length > 0}
 								<div class="rounded border pr-2 pl-2">{item.log_entries.description}</div>
 							{/if}
 						</a>

@@ -2,44 +2,12 @@
 	import type { PageProps } from './$types';
 	import LogForm from '$lib/components/LogForm.svelte';
 	import Icon from '$lib/components/Icon.svelte';
+	import type { LogEntry, LogEntryData, LogType, InitialData } from '$lib/types';
 
 	let { data }: PageProps = $props();
 
 	console.log('Data: ', data);
 
-	type LogEntry = {
-		id: string;
-		typeId: string;
-		timestamp: Date;
-		unix: number;
-		note: string | null;
-		description: string | null;
-		score: number;
-	};
-
-	type LogType = {
-		id: string;
-		name: string;
-		icon: string;
-		color: string;
-	};
-
-	type LogEntryData = {
-		log_entries: LogEntry;
-		log_types: LogType;
-	};
-
-	type InitialData = Partial<{
-		id: string;
-		typeId: string;
-		logTypeName: string;
-		note: string;
-		description: string;
-		score: number;
-		timestamp: Date;
-		selectedTags: { id: string; label: string }[];
-		selectedTagIds: string[];
-	}>;
 
 	function isLogEntryData(obj: unknown): obj is LogEntryData {
 		return typeof obj === 'object' && obj !== null && 'log_entries' in obj && 'log_types' in obj;
