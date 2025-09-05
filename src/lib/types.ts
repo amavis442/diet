@@ -33,3 +33,9 @@ export type InitialData = Partial<{
 }>;
 
 export type Entries = LogEntryData[] | never[];
+
+export type Result<T> = {
+    ok: boolean;
+    error?: string;
+    data?: T;
+};

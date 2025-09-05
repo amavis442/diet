@@ -29,6 +29,13 @@
       "when": 1756391268906,
       "tag": "0003_futuristic_santa_claus",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1757073503612,
+      "tag": "0004_low_spot",
+      "breakpoints": true
     }
   ]
 }
