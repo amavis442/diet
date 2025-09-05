@@ -6,17 +6,7 @@ import { fail, redirect } from '@sveltejs/kit';
 import { z } from 'zod';
 import { eq } from 'drizzle-orm';
 
-const schema = z.object({
-    name: z.string().min(1).max(50),
-    icon: z.string().min(1),
-});
-
-
 export const load: PageServerLoad = async ({ locals, params }) => {
-    if (locals.session === null || locals.user === null) {
-        throw redirect(303, '/login');
-    }
-
     const availableLogTypes = await db.select().from(logTypes);
     //console.log(availableLogTypes);
     return {

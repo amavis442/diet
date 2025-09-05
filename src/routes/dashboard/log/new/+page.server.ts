@@ -12,10 +12,6 @@ const schema = z.object({
 });
 
 export async function load({locals}) {
-    if (locals.session === null || locals.user === null) {
-        throw redirect(303, '/login');
-    }
-
     const types = await db.select().from(logTypes);
     const logTags = await db.select().from(tags);
     return { types, logTags };

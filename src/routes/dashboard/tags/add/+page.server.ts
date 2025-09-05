@@ -8,14 +8,6 @@ const schema = z.object({
     label: z.string().min(1).max(50),
 });
 
-export const load: PageServerLoad = async (event: RequestEvent) => {
-    const locals = event.locals;
-    if (locals.session === null || locals.user === null) {
-        throw redirect(303, '/login');
-    }
-};
-
-
 export const actions = {
     create: async ({ request }) => {
         const form = await request.formData();

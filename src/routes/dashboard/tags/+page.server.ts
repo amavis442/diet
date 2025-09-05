@@ -12,10 +12,6 @@ const schema = z.object({
 
 
 export const load: PageServerLoad = async ({ locals,params }) => {
-    if (locals.session === null || locals.user === null) {
-        throw redirect(303, '/login');
-    }
-
     const availableTags = await db.select().from(tags);
     //console.log(availableLogTypes);
     return {

@@ -17,7 +17,7 @@
     <a href="/dashboard/log"><ClipboardClock/></a>
     <a href="/dashboard/stats"><ChartColumnBig /></a>
     <a href="/dashboard/settings"><Settings /></a>
-    <form method="post" use:enhance action="?/logout">
+    <form method="post" use:enhance action="/logout">
 		<button title="Sign out"><LogOut /></button>
 	</form>
 </nav>

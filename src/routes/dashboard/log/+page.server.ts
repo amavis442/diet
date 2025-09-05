@@ -36,11 +36,6 @@ async function getEntriesForDate(currentDate: Date) {
 }
 
 export const load = (async ({ locals, url }) => {
-    if (!locals.user) {
-        throw redirect(303, '/login');
-    }
-
-
     let date = url.searchParams.get('date')?.toString() ?? '';
     if (date.length > 0) {
         const selectedDate = new Date(date);

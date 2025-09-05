@@ -11,10 +11,6 @@ import { localTimeToUTC } from '$lib/utils/date';
 import { saveTagsForEntry } from '$lib/server/db/utils/saveTags';
 
 export const load: PageServerLoad = (async ({ locals, params }) => {
-    if (locals.session === null || locals.user === null) {
-        throw redirect(303, '/login');
-    }
-
     let id = params.slug;
 
     if (typeof id !== 'string') return fail(400, { error: 'Missing ID' });

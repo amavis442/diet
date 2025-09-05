@@ -12,11 +12,6 @@ const schema = z.object({
 
 
 export const load: PageServerLoad = async (event: RequestEvent) => {
-    const locals = event.locals;
-    if (locals.session === null || locals.user === null) {
-        throw redirect(303, '/login');
-    }
-
     const params = event.params;
     console.log('Params are:', params);
     let id = params.id;

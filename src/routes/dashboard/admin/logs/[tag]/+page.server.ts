@@ -7,10 +7,6 @@ import { eq } from 'drizzle-orm';
 import { redirect } from '@sveltejs/kit';
 
 export const load: PageServerLoad = async ({ locals, params }) => {
-  if (locals.session === null || locals.user === null) {
-    throw redirect(303, '/login');
-  }
-
   const targetTagId = params.tag;
   //const logTags = await db.select().from(logTag).where(eq(logTag.tagId, tagId));
 

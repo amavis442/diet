@@ -20,9 +20,6 @@ const schema = z.object({
 });
 
 export const load = (async ({ locals, params }) => {
-    if (locals.session === null || locals.user === null) {
-        throw redirect(303, '/login');
-    }
     const id: string = params.id;
 
     if (typeof id !== 'string') return fail(400, { error: 'Missing ID' });
