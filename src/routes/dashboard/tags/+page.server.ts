@@ -11,7 +11,11 @@ const schema = z.object({
 });
 
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({ locals,params }) => {
+    if (locals.session === null || locals.user === null) {
+        throw redirect(303, '/login');
+    }
+
     const availableTags = await db.select().from(tags);
     //console.log(availableLogTypes);
     return {
@@ -26,6 +30,6 @@ export const actions = {
         if (typeof id !== 'string') return fail(400, { error: 'Missing ID' });
 
         await db.delete(tags).where(eq(tags.id, id));
-        throw redirect(303, '/tags');
+        throw redirect(303, '/dashboard/tags');
     }
 } satisfies Actions;

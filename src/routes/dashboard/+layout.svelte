@@ -2,7 +2,8 @@
 	import '../../app.css';
 	import favicon from '$lib/assets/favicon.svg';
 	//import CircleAlert from '@lucide/svelte/icons/circle-alert';
-	import { House,ClipboardClock, ChartColumnBig,Settings } from '@lucide/svelte';
+	import { House,ClipboardClock, ChartColumnBig,Settings, LogOut } from '@lucide/svelte';
+    import { enhance } from "$app/forms";
 
 	let { children } = $props();
 </script>
@@ -16,9 +17,12 @@
     <a href="/dashboard/log"><ClipboardClock/></a>
     <a href="/dashboard/stats"><ChartColumnBig /></a>
     <a href="/dashboard/settings"><Settings /></a>
+    <form method="post" use:enhance action="?/logout">
+		<button title="Sign out"><LogOut /></button>
+	</form>
 </nav>
 
 
-    <div class="flex justify-center">
+    <div class="flex justify-center w-full">
         {@render children?.()}
     </div>

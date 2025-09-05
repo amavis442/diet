@@ -37,8 +37,9 @@ async function getEntriesForDate(currentDate: Date) {
 
 export const load = (async ({ locals, url }) => {
     if (!locals.user) {
-        throw redirect(303, '/dashboard/login');
+        throw redirect(303, '/login');
     }
+    console.debug("User:: " + locals.user);
 
     let date = url.searchParams.get('date')?.toString() ?? '';
     if (date.length > 0) {

@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { Plus } from '@lucide/svelte';
 	import type { PageProps } from './$types';
 	import Icon from '$lib/components/Icon.svelte';
 

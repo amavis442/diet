@@ -12,7 +12,7 @@ export const load: PageServerLoad = async (event: PageServerLoadEvent) => {
 };
 
 export const actions: Actions = {
-	default: async function action(event: RequestEvent) {
+	logout: async function action(event: RequestEvent) {
 		if (event.locals.session === null) {
 			return fail(401, {
 				message: "Not authenticated"

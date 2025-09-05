@@ -13,7 +13,6 @@
 		console.log(tagInUse);
 	});
 
-
 	let initialData = $derived({ id: tag.id, label: tag.label });
 </script>
 
@@ -23,7 +22,7 @@
 			<strong>Cannot delete tag:</strong> This tag is used in {data.count} log entries and cannot be
 			removed.
 			<br />
-			<a href={`/admin/logs?tag=${data.tagId}`} class="text-blue-600 underline"
+			<a href={`/dashboard/admin/logs?tag=${data.tagId}`} class="text-blue-600 underline"
 				>View linked entries</a
 			>
 		</div>
@@ -31,5 +30,5 @@
 
 	<TagForm action="update" {initialData} {tagInUse} {tagId} {count}/>
 
-	<div><a href="/tags">Back</a></div>
+	<div><a href="/dashboard/tags">Back</a></div>
 </div>

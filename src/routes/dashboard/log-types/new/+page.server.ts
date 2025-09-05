@@ -1,4 +1,4 @@
-import type { Actions } from './$types';
+import type { Actions, PageServerLoad } from './$types';
 import { db } from '$lib/server/db';
 import { logTypes } from '$lib/server/db/schema/log_types';
 import { fail, redirect } from '@sveltejs/kit';
@@ -9,6 +9,12 @@ const schema = z.object({
     icon: z.string().min(1),
     color: z.string().min(1),
 });
+
+export const load: PageServerLoad = async ({ locals, params }) => {
+    if (locals.session === null || locals.user === null) {
+        throw redirect(303, '/login');
+    }
+};
 
 export const actions = {
     create: async ({ request }) => {

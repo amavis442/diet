@@ -13,7 +13,11 @@ const schema = z.object({
 });
 
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({ locals,params }) => {
+    if (locals.session === null || locals.user === null) {
+        throw redirect(303, '/login');
+      }
+
     console.log('Params are:', params);
     let id = params.id;
 

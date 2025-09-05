@@ -10,7 +10,10 @@ import { eq } from 'drizzle-orm';
 import { localTimeToUTC } from '$lib/utils/date';
 import { saveTagsForEntry } from '$lib/server/db/utils/saveTags';
 
-export const load: PageServerLoad = (async ({ params }) => {
+export const load: PageServerLoad = (async ({ locals, params }) => {
+    if (locals.session === null || locals.user === null) {
+        throw redirect(303, '/login');
+    }
 
     let id = params.slug;
 

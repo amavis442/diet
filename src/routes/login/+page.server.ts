@@ -1,6 +1,6 @@
 // src/routes/login/+page.server.ts
 import { redirect, fail } from '@sveltejs/kit';
-import type { Actions, PageServerLoad } from './$types';
+import type { Actions, RequestEvent } from './$types';
 import { generateSessionToken, setSessionTokenCookie, createSession } from "$lib/server/auth";
 import type { User } from '$lib/server/db/schema';
 import { validateUser } from '$lib/server/db/user';
