@@ -16,7 +16,7 @@
 					>Username</label
 				>
 				<input
-					type="test"
+					type="text"
 					id="username"
 					name="username"
 					autocomplete="username"
