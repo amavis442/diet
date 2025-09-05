@@ -19,6 +19,6 @@
 	<LogForm {initialData} {tags} />
 	<hr class="mt-2" />
 	<div class="mt-4">
-		<a href="/log" class="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">&lt;&lt; Back</a>
+		<a href="/dashboard/log" class="rounded bg-blue-600 px-4 py-2 text-white hover:bg-blue-700">&lt;&lt; Back</a>
 	</div>
 </div>

@@ -24,5 +24,5 @@
 	<ColorPicker onSelect={(color: string) => (chosenColor = color)} selected={chosenColor}/>
 </div>
 
-<div><a href="/log-types">Back</a></div>
+<div><a href="/dashboard/log-types">Back</a></div>
 </div>

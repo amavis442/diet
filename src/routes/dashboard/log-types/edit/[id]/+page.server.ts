@@ -38,7 +38,7 @@ export const actions = {
 
         await db.update(logTypes).set({ name: name, icon: icon, color: color }).where(eq(logTypes.id, id));
 
-        throw redirect(303, '/log-types');
+        throw redirect(303, '/dashboard/log-types');
     },
     delete: async ({ request }) => {
         const form = await request.formData();
@@ -46,6 +46,6 @@ export const actions = {
         if (typeof id !== 'string') return fail(400, { error: 'Missing ID' });
 
         await db.delete(logTypes).where(eq(logTypes.id, id));
-        throw redirect(303, '/log-types');
+        throw redirect(303, '/dashboard/log-types');
     }
 } satisfies Actions;

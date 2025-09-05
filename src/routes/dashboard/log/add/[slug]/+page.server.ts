@@ -89,6 +89,6 @@ export const actions = {
             await saveTagsForEntry(newId, tags);
         }
 
-        throw redirect(303, '/log');
+        throw redirect(303, '/dashboard/log');
     },
 } satisfies Actions;

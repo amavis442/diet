@@ -57,7 +57,7 @@
 		{#if Array.isArray(data.logtypes) && data.logtypes.length > 0}
 			{#each data.logtypes as logtype}
 				<a
-					href="/log/add/{logtype.id}"
+					href="/dashboard/log/add/{logtype.id}"
 					class="rounded bg-{logtype.color} flex items-center justify-center p-2"
 					title={logtype.name}><Icon name={logtype.icon} /></a
 				>
@@ -71,7 +71,7 @@
 			{#if Array.isArray(entries) && entries.length > 0}
 				{#each entries as item, index}
 					<li class="bg-{item.log_types.color} flex gap-x-1 p-2">
-						<a href="/log/edit/{item.log_entries.id}" class="flex gap-2 p-2">
+						<a href="/dashboard/log/edit/{item.log_entries.id}" class="flex gap-2 p-2">
 							<Icon name={item.log_types.icon} />
 							{item.log_entries.timestamp.toTimeString().slice(0, 5)} &mdash; {item.log_types.name}
 							{#if item.log_types.name.includes('Toilet')}

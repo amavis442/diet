@@ -4,7 +4,7 @@ import { logTypes } from '$lib/server/db/schema/log_types';
 import { logEntries } from '$lib/server/db/schema/log_entries';
 import { eq, sql, asc } from 'drizzle-orm';
 import { getUTCRangeForLocalDay, getUTCRange } from '$lib/utils/date';
-
+import { redirect } from '@sveltejs/kit';
 
 async function getEntriesForDate(currentDate: Date) {
     const { startUTC: localStart, endUTC: localEnd } = getUTCRange(currentDate);
@@ -35,24 +35,18 @@ async function getEntriesForDate(currentDate: Date) {
     }
 }
 
-
-
-
-export const load = (async ({url}) => {
+export const load = (async ({ locals, url }) => {
+    if (!locals.user) {
+        throw redirect(303, '/dashboard/login');
+    }
 
     let date = url.searchParams.get('date')?.toString() ?? '';
     if (date.length > 0) {
         const selectedDate = new Date(date);
         return await getEntriesForDate(selectedDate);
     }
-    /*if (date.valueOf > 0) {
-
-    }*/
-    //console.log('DATE IS: ', new Date(date));
 
     const currentDate = new Date(); // UTC TIME
-    const targetDate = currentDate.toISOString().slice(0, 10);
-    //console.log('Target date: ', targetDate);
 
     return await getEntriesForDate(currentDate);
 }) satisfies PageServerLoad;
@@ -65,8 +59,8 @@ export const actions = {
 
         if (selectedDate) {
             const d = new Date(selectedDate);
-        
-            const result =  await getEntriesForDate(d);
+
+            const result = await getEntriesForDate(d);
             console.log('UpdateData: ', result);
 
             return result;
