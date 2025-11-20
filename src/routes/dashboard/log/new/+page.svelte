@@ -5,7 +5,7 @@
 </script>
 
 <div class="grid w-1/2">
-	<LogTypeForm action="create" />
+	<LogTypeForm action="create" selectedIcon="" selectedColor="" />
 
 	<div class="w-full rounded border">
 		<IconPicker onSelect={(name: string) => (chosenIcon = name)} />

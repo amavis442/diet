@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { PageProps } from '../$types';
+	import type { PageProps } from './$types';
 	import Icon from '$lib/components/Icon.svelte';
 
 	let { data }: PageProps = $props();
