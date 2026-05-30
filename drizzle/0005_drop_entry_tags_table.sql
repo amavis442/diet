@@ -1,0 +1,1 @@
+DROP TABLE "entry_tags" CASCADE;

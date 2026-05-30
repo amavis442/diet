@@ -36,6 +36,13 @@
       "when": 1757073503612,
       "tag": "0004_low_spot",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1780158154567,
+      "tag": "0005_drop_entry_tags_table",
+      "breakpoints": true
     }
   ]
 }
