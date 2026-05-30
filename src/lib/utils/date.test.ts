@@ -1,20 +1,16 @@
-// adjustForLocalTime.test.ts
 import { describe, it, expect } from 'vitest';
 import { adjustForLocalTime } from './date';
 
 describe('adjustForLocalTime', () => {
-    it('should adjust a UTC timestamp to local time', () => {
-        const utcDate = new Date(Date.UTC(2023, 0, 1, 12, 0, 0)); // 12:00 UTC
-    
-        // Before adjustment: local hour of UTC time
-        const beforeAdjustment = utcDate.getHours();
-    
-        adjustForLocalTime(utcDate);
-    
-        // After adjustment: should be offset by system timezone
+    it('should return a new Date adjusted to local time without mutating the input', () => {
+        const utcDate = new Date(Date.UTC(2023, 0, 1, 12, 0, 0));
+        const originalTime = utcDate.getTime();
+        const beforeHour = utcDate.getHours();
+
+        const result = adjustForLocalTime(utcDate);
+
         const offsetHours = -new Date().getTimezoneOffset() / 60;
-        const expectedHour = beforeAdjustment + offsetHours;
-    
-        expect(utcDate.getHours()).toBe(expectedHour);
-      });
+        expect(result.getHours()).toBe(beforeHour + offsetHours);
+        expect(utcDate.getTime()).toBe(originalTime);
+    });
 });
