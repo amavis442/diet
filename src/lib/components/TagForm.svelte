@@ -10,14 +10,12 @@
 	} = $props<{
 		initialData?: Partial<{ id: string; label: string }>;
 		action?: 'create' | 'update';
-		tagInUse: true | false;
+		tagInUse: boolean;
 		tagId: string;
 		count: number;
 	}>();
 
-	$effect(() => {
-		console.log(tagInUse);
-	});
+
 	let label = $state(initialData.label ?? '');
 </script>
 

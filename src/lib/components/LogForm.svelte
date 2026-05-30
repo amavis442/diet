@@ -22,11 +22,7 @@
 		tags: { id: string; label: string }[];
 	}>();
 
-	console.log('InitialData: ', initialData);
-
-	const currentTimestamp = new Date();
-	console.log('Current time: ', currentTimestamp);
-	const currentDateTime = currentTimestamp;
+	const currentDateTime = new Date();
 
 	let note = $state(initialData.note ?? '');
 	let description = $state(initialData.description ?? '');
