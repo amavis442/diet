@@ -25,6 +25,6 @@ export const actions = {
         }
 
         await db.insert(logTypes).values(result.data);
-        throw redirect(303, '/dashboard/log-types');
+        redirect(303, '/dashboard/log-types');
     },
 } satisfies Actions;

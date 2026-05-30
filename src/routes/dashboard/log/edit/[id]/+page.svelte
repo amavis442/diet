@@ -2,12 +2,9 @@
 	import type { PageProps } from './$types';
 	import LogForm from '$lib/components/LogForm.svelte';
 	import Icon from '$lib/components/Icon.svelte';
-	import type { LogEntry, LogEntryData, LogType, InitialData } from '$lib/types';
+	import type { LogEntryData, LogType, InitialData } from '$lib/types';
 
 	let { data }: PageProps = $props();
-
-	console.log('Data: ', data);
-
 
 	function isLogEntryData(obj: unknown): obj is LogEntryData {
 		return typeof obj === 'object' && obj !== null && 'log_entries' in obj && 'log_types' in obj;
@@ -24,30 +21,20 @@
 		);
 	}
 
-	//let entry = Array.isArray(data?.entry) ? data.entry[0] : undefined;
-	let entry: LogEntryData | {} | undefined = data?.entry ? data.entry : undefined;
+	let entry = $derived(data?.entry);
+	let logType = $derived(isLogEntryData(entry) ? entry.log_types : {});
+	let logEntry = $derived(isLogEntryData(entry) ? entry.log_entries : {});
+	let tags = $derived(data.tags ?? []);
 
-	console.log('Entry:', data.entry);
+	let initialData = $derived<InitialData>({
+		...(logEntry as InitialData),
+		logTypeName: isLogType(logType) ? logType.name : '',
+		selectedTags: data.selectedTags ?? [],
+		selectedTagIds: data.selectedTagIds ?? []
+	});
 
-	let logType: LogType | {} = isLogEntryData(entry) ? entry.log_types : {};
-	let logEntry: LogEntry | {} = isLogEntryData(entry) ? entry.log_entries : {};
-
-	let initialData: InitialData = logEntry as InitialData;
-
-	let tags = data.tags ?? [];
-	let bgColor = $state('white');
-	let icon = $state('');
-	
-	initialData.logTypeName = '';
-	if (isLogType(logType)) {
-		initialData.logTypeName = logType.name;
-		bgColor = logType.color;
-		icon = logType.icon;
-	}
-	initialData.selectedTags = data.selectedTags ?? [];
-	initialData.selectedTagIds = data.selectedTagIds ?? [];
-
-	console.log('InitialData is: ', initialData);
+	let bgColor = $derived(isLogType(logType) ? logType.color : 'white');
+	let icon = $derived(isLogType(logType) ? logType.icon : '');
 </script>
 
 <div class="grid">

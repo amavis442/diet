@@ -21,6 +21,6 @@ export const actions = {
         }
 
         await db.insert(tags).values(result.data);
-        throw redirect(303, '/dashboard/tags');
+        redirect(303, '/dashboard/tags');
     },
 } satisfies Actions;

@@ -4,11 +4,10 @@
 	import Icon from '$lib/components/Icon.svelte';
 
 	let { data }: PageProps = $props();
-	let logType = data.logType;
-	const tags = data.tags  ?? [];
+	let logType = $derived(data.logType);
+	let tags = $derived(data.tags ?? []);
 
-	let initialData = { typeId: logType?.id, logTypeName: logType?.name };
-	console.log(data);
+	let initialData = $derived({ typeId: logType?.id, logTypeName: logType?.name });
 </script>
 
 <div class="grid">

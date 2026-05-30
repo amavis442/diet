@@ -3,7 +3,7 @@
 	import Icon from '$lib/components/Icon.svelte';
 
 	let { data }: PageProps = $props();
-	let availableLogTypes = data.availableLogTypes;
+	let availableLogTypes = $derived(data.availableLogTypes);
 	const selectedDate = $state(new Date());
 </script>
 

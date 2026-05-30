@@ -26,6 +26,6 @@ export const actions = {
         if (typeof id !== 'string') return fail(400, { error: 'Missing ID' });
 
         await db.delete(tags).where(eq(tags.id, id));
-        throw redirect(303, '/dashboard/tags');
+        redirect(303, '/dashboard/tags');
     }
 } satisfies Actions;

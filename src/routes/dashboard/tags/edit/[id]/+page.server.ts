@@ -37,7 +37,7 @@ export const actions = {
 
         await db.update(tags).set({ label: label }).where(eq(tags.id, id));
 
-        throw redirect(303, '/dashboard/tags');
+        redirect(303, '/dashboard/tags');
     },
     delete: async (event: RequestEvent) => {
         const request = event.request;
@@ -62,6 +62,6 @@ export const actions = {
 
 
         await db.delete(tags).where(eq(tags.id, tagId));
-        throw redirect(303, '/dashboard/tags');
+        redirect(303, '/dashboard/tags');
     }
 } satisfies Actions;
