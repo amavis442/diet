@@ -47,7 +47,7 @@
 
 		hour = initialHourStr;
 		minute = initialMinuteStr;
-		date = formatDateForInput(currentDateTime);
+		date = formatDateForInput(initialData.timestamp);
 	}
 
 	function* range(start: number, end: number): Generator<number> {
