@@ -21,14 +21,24 @@ export async function verifyPasswordStrength(password: string): Promise<boolean>
 	}
 	const hash = encodeHexLowerCase(sha1(new TextEncoder().encode(password)));
 	const hashPrefix = hash.slice(0, 5);
-	const response = await fetch(`https://api.pwnedpasswords.com/range/${hashPrefix}`);
-	const data = await response.text();
-	const items = data.split("\n");
-	for (const item of items) {
-		const hashSuffix = item.slice(0, 35).toLowerCase();
-		if (hash === hashPrefix + hashSuffix) {
-			return false;
+
+	try {
+		const response = await fetch(`https://api.pwnedpasswords.com/range/${hashPrefix}`);
+		if (!response.ok) {
+			return true;
 		}
+		const data = await response.text();
+		const items = data.split("\n");
+		for (const item of items) {
+			const hashSuffix = item.slice(0, 35).toLowerCase();
+			if (hash === hashPrefix + hashSuffix) {
+				return false;
+			}
+		}
+	} catch {
+		// Fail open: treat API unavailability as the password being acceptable
+		return true;
 	}
+
 	return true;
 }
