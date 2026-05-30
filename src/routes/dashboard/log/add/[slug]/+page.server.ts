@@ -7,7 +7,6 @@ import { tags } from '$lib/server/db/schema/tags';
 import { logEntries } from '$lib/server/db/schema/log_entries';
 import { z } from 'zod';
 import { eq } from 'drizzle-orm';
-import { localTimeToUTC } from '$lib/utils/date';
 import { saveTagsForEntry } from '$lib/server/db/utils/saveTags';
 
 export const load: PageServerLoad = (async ({ locals, params }) => {
