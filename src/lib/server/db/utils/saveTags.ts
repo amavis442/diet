@@ -9,22 +9,19 @@ const logTagSchema = z.object({
 });
 
 export async function saveTagsForEntry(entryId: string, tagIds: FormDataEntryValue[]) {
-    // Clear existing tags
     await db.delete(logTag).where(eq(logTag.entryId, entryId));
 
-    // Insert new tags
-    for (const tagId of tagIds) {
-        const tagEntry = {
-            entryId,
-            tagId: tagId.toString()
-        };
+    const validEntries = tagIds
+        .map(tagId => ({ entryId, tagId: tagId.toString() }))
+        .filter(entry => {
+            const result = logTagSchema.safeParse(entry);
+            if (!result.success) {
+                console.warn('Invalid tag entry skipped:', entry);
+            }
+            return result.success;
+        });
 
-        const validation = logTagSchema.safeParse(tagEntry);
-        if (!validation.success) {
-            console.warn('Invalid tag entry skipped:', tagEntry);
-            continue;
-        }
-
-        await db.insert(logTag).values(tagEntry);
+    if (validEntries.length > 0) {
+        await db.insert(logTag).values(validEntries);
     }
 }
