@@ -20,7 +20,6 @@
 	let color = $state(initialData.color ?? '');
 
 	$effect(() => {
-		console.log('Chosen icon:', selectedIcon);
 		icon = selectedIcon;
 		color = selectedColor;
 	});

@@ -1,4 +1,4 @@
-import { pgTable, text, varchar, uuid } from 'drizzle-orm/pg-core';
+import { pgTable, uuid } from 'drizzle-orm/pg-core';
 import {logEntries } from './log_entries';
 import {tags } from './tags';
 
