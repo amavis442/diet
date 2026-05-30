@@ -111,7 +111,7 @@ export const actions = {
 
         saveTagsForEntry(id, tags);
 
-        throw redirect(303, '/dashboard/log');
+        redirect(303, '/dashboard/log');
     },
     delete: async ({ request }) => {
         const form = await request.formData();
@@ -121,6 +121,6 @@ export const actions = {
         await db.delete(logTag).where(eq(logTag.entryId, id));
 
         await db.delete(logEntries).where(eq(logEntries.id, id));
-        throw redirect(303, '/dashboard/log');
+        redirect(303, '/dashboard/log');
     }
 } satisfies Actions;

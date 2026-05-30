@@ -66,7 +66,7 @@
 	</div>
 
 	<!-- Placeholder entry list -->
-	<div class="h-140 flex-grow overflow-y-auto rounded border">
+	<div class="h-140 grow overflow-y-auto rounded border">
 		<ul class="mt-4">
 			{#if Array.isArray(entries) && entries.length > 0}
 				{#each entries as item, index}
