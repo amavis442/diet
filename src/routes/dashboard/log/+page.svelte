@@ -26,9 +26,7 @@
 			return;
 		}
 		if (startDate) {
-			console.log('startDate changed:', startDate);
 			const isoDate = format(new Date(startDate), 'yyyy-MM-dd');
-			console.log('iso date is: ', isoDate);
 			goto(`?date=${isoDate}`);
 		}
 	});
