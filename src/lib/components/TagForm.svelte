@@ -16,7 +16,9 @@
 	}>();
 
 
+	// svelte-ignore state_referenced_locally
 	let label = $state(initialData.label ?? '');
+
 </script>
 
 {#if tagInUse}

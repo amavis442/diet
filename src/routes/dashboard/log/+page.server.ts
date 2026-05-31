@@ -21,8 +21,8 @@ async function getEntriesForDate(currentDate: Date) {
     if (Array.isArray(logRaw) && logRaw.length > 0) {
         const result = { entries: logRaw, logtypes: allLogTypes, date: currentDate };
         //console.log(result);
-        return { entries: logRaw, logtypes: allLogTypes };
-
+        //return { entries: logRaw, logtypes: allLogTypes };
+        return result;
     } else if (Array.isArray(allLogTypes) && allLogTypes.length > 0) {
         return { entries: [], logtypes: allLogTypes, date: currentDate };
     } else {

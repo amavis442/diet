@@ -4,7 +4,7 @@
 	import Icon from '$lib/components/Icon.svelte';
 
 	let { data }: PageProps = $props();
-	let availableTags = data.availableTags;
+	let availableTags = $derived(data.availableTags);
 </script>
 
 <div class="grid">
