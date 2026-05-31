@@ -78,6 +78,7 @@ export const actions = {
         const dateStr = form.get('date') as string; // e.g. "2025-08-11"
         const hourStr = form.get('hour') as string;
         const minuteStr = form.get('minute') as string;
+   
 
         let tags = form.getAll('tags');// .get('tags') as string;
         console.log('Form tags:', tags);
@@ -111,7 +112,8 @@ export const actions = {
 
         saveTagsForEntry(id, tags);
 
-        redirect(303, '/dashboard/log');
+   
+        redirect(303, '/dashboard/log?date=' + dateStr);
     },
     delete: async ({ request }) => {
         const form = await request.formData();

@@ -24,9 +24,9 @@
 
 	const currentDateTime = new Date();
 
-	let note = $state(initialData.note ?? '');
-	let description = $state(initialData.description ?? '');
-	let score = $state(initialData.score ?? 4);
+	let note = $state('');
+	let description = $state('');
+	let score = $state(4);
 
 	let date = $state(formatDateForInput(currentDateTime));
 	const { hour: hourStr, minute: minuteStr } = formatTimeForInput(currentDateTime);
@@ -34,17 +34,24 @@
 	let hour = $state(hourStr);
 	let minute = $state(minuteStr);
 
-	let selTags = $state(initialData.selectedTagIds ?? []);
+	let selTags = $state<string[]>([]);
 
-	if (initialData.timestamp) {
-		const { hour: initialHourStr, minute: initialMinuteStr } = formatTimeForInput(
-			initialData.timestamp
-		);
+	$effect(() => {
+		note = initialData.note ?? '';
+		description = initialData.description ?? '';
+		score = initialData.score ?? 4;
+		selTags = initialData.selectedTagIds ?? [];
 
-		hour = initialHourStr;
-		minute = initialMinuteStr;
-		date = formatDateForInput(initialData.timestamp);
-	}
+		if (initialData.timestamp) {
+			const { hour: initialHourStr, minute: initialMinuteStr } = formatTimeForInput(
+				initialData.timestamp
+			);
+
+			hour = initialHourStr;
+			minute = initialMinuteStr;
+			date = formatDateForInput(initialData.timestamp);
+		}
+	});
 
 	function* range(start: number, end: number): Generator<number> {
 		for (let i = start; i < end; i++) yield i;

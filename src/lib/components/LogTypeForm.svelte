@@ -13,15 +13,17 @@
 		selectedColor:string;
 	}>();
 
-	//let { initialData = {}, action = 'create', chosenIcon} = $props();
-
+	// svelte-ignore state_referenced_locally
 	let name = $state(initialData.name ?? '');
+	// svelte-ignore state_referenced_locally
 	let icon = $state(initialData.icon ?? '');
+	// svelte-ignore state_referenced_locally
 	let color = $state(initialData.color ?? '');
 
 	$effect(() => {
 		icon = selectedIcon;
 		color = selectedColor;
+	    name = initialData.name ?? '';
 	});
 </script>
 

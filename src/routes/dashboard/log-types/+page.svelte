@@ -5,7 +5,7 @@
 
 
 	let { data }: PageProps = $props();
-	let availableLogTypes = data.availableLogTypes;
+	let availableLogTypes = $derived(data.availableLogTypes);
 </script>
 
 <div class="grid">

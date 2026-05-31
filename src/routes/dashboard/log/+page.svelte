@@ -4,10 +4,12 @@
 	import { DatePicker } from '@svelte-plugins/datepicker';
 	import { goto } from '$app/navigation';
 	import type { Entries } from '$lib/types';
-
+	import { page } from '$app/state';
 	let { data } = $props();
 
-	let startDate = $state(new Date());
+	let startDate = $state(
+		page.url.searchParams.get('date') ? new Date(page.url.searchParams.get('date')!) : new Date()
+	);
 	let dateFormat = 'MM/dd/yy';
 	let isOpen = $state(false);
 
@@ -19,14 +21,15 @@
 		return (dateString && format(new Date(dateString), dateFormat)) || '';
 	};
 
-	let initialized = $state(false);
+	let initialized = false;
 	$effect(() => {
+		const chosenDate = startDate;
 		if (!initialized) {
 			initialized = true;
 			return;
 		}
-		if (startDate) {
-			const isoDate = format(new Date(startDate), 'yyyy-MM-dd');
+		if (chosenDate) {
+			const isoDate = format(new Date(chosenDate), 'yyyy-MM-dd');
 			goto(`?date=${isoDate}`);
 		}
 	});
@@ -76,7 +79,9 @@
 								<div class="rounded border pr-2 pl-2">score: {item.log_entries.score}</div>
 							{/if}
 							{#if item.log_entries.note != undefined && item.log_entries.note != '-' && item.log_entries.note.length > 0}
-								<div class="rounded border pr-2 pl-2">{item.log_entries.note.substring(0, 25)}...</div>
+								<div class="rounded border pr-2 pl-2">
+									{item.log_entries.note.substring(0, 25)}...
+								</div>
 							{/if}
 							{#if item.log_entries.description != undefined && item.log_entries.description != '-' && item.log_entries.description.length > 0}
 								<div class="rounded border pr-2 pl-2">{item.log_entries.description}</div>

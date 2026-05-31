@@ -3,17 +3,20 @@
 	import type { Tag } from '$lib/server/db/schema.js';
 
 	let { data } = $props();
-	let tag: Tag = data.logType[0];
+	const tag: Tag = $derived(data.logType[0]);
 
+	// svelte-ignore state_referenced_locally
 	let tagInUse = $state(data?.tagInUse ?? false);
+	// svelte-ignore state_referenced_locally
 	let tagId = $state(data?.tagId ?? '');
+	// svelte-ignore state_referenced_locally
 	let count = $state(data?.count ?? 0);
 
 	$effect(() => {
 		console.log(tagInUse);
 	});
 
-	let initialData = $derived({ id: tag.id, label: tag.label });
+	const initialData = $derived({ id: tag.id, label: tag.label });
 </script>
 
 <div class="grid gap-1">

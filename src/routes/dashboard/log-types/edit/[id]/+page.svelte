@@ -7,17 +7,15 @@
 	let chosenIcon = $state<string>('');
 	let chosenColor = $state<string>('blue-100');
 
-	$effect(() => {
-		console.log(chosenIcon);
-	});
-
 	let { data } = $props();
-	let logType: LogType = data.logType[0];
+	let logType: LogType = $derived<LogType>(data.logType[0] ??  {} as LogType);
 
 	let initialData = $derived({id: logType.id, icon: logType.icon, name: logType.name, color: logType.color});
 
-	chosenIcon = logType.icon;
-	chosenColor = logType.color;
+	$effect(()=> {
+		chosenIcon = logType.icon
+		chosenColor = logType.color;
+	});
 </script>
 
 <div class="grid gap-1">
